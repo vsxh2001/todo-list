@@ -1,33 +1,22 @@
-import { set } from 'lodash';
 import React, { useState } from 'react';
+import "./App.css";
 
 function Task({ task, onToggleComplete, onDelete }) {
   return (
-    <div>
+    <div className='task-item'>
       <input
         type="checkbox"
         checked={task.isCompleted}
         onChange={() => onToggleComplete(task.id)}
       />
-      <span>{task.text}</span>
+      <span className='task-text'>{task.text}</span>
       <button onClick={() => onDelete(task.id)}>Delete</button>
     </div>
   );
 }
 
 function TaskList() {
-  const [tasks, setTasks] = useState([
-    // Example initial state
-    { id: 1, text: "Do homework", isCompleted: false },
-    { id: 2, text: "Go grocery shopping", isCompleted: false },
-  ]);
-
-  const addTask = (taskText) => {
-    // Add a new task to the tasks array with a unique id and the given text
-    let id = tasks.length + 1;
-    let newTask = { id: id, text: taskText, isCompleted: false };
-    setTasks([...tasks, newTask]);
-  };
+  const [tasks, setTasks] = useState([]);
 
   const toggleComplete = (id) => {
     // Toggle the isCompleted state of the task with the given id
@@ -43,19 +32,39 @@ function TaskList() {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
+  const addTask = (task_test) => {
+    // Add a new task to the tasks array with a unique id and the given text
+    let id = tasks.length + 1;
+    let newTask = { id: id, text: task_test, isCompleted: false };
+    setTasks([...tasks, newTask]);
+  };
+
+  const addTaskHandeler = (event) => {
+    event.preventDefault();
+    let task_test = event.target[0].value;
+    addTask(task_test);
+    event.target[0].value = "";
+  };
+
   return (
     <div>
-      {/* Map over tasks to render each one */}
-      {tasks.map((task) => (
-        <Task
-          key={task.id}
-          task={task}
-          onToggleComplete={toggleComplete}
-          onDelete={deleteTask}
-        />
-      ))}
+      <div className='task-list'>
+        {/* Map over tasks to render each one */}
+        {tasks.map((task) => (
+          <Task
+            key={task.id}
+            task={task}
+            onToggleComplete={toggleComplete}
+            onDelete={deleteTask}
+          />
+        ))}
 
-      {/* Input and button to add a new task */}
+        {/* Input and button to add a new task */}
+      </div>
+      <form onSubmit={addTaskHandeler} className="task-item">
+        <input type="text" placeholder="Add a new task" className='task-input' />
+        <button type="submit" className='add-button'>Add</button>
+      </form>
     </div>
   );
 }
